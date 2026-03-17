@@ -10,6 +10,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BASE_CONF = PROJECT_ROOT / "shadowrocket" / "base.conf"
 DEFAULT_RULE_CONFIG_DIR = PROJECT_ROOT / "config" / "shadowrocket"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "shadowrocket"
+SUBSCRIPTION_NAME = "SUBLINK.SMALLMAIN.COM"
 COMMENT_PREFIXES = ("#", ";")
 INLINE_RULE_FLAGS = {"no-resolve"}
 
@@ -58,25 +59,27 @@ def parse_proxy_group(value: str) -> str:
 
 def render_select_group(name: str, tail_tokens: list[str]) -> str:
     policies: list[str] = []
-    params: list[str] = []
+    regex_filter = ""
 
-    for index, token in enumerate(tail_tokens):
+    for token in tail_tokens:
         stripped = token.strip()
         if not stripped:
             continue
         if stripped.startswith("[]"):
             policies.append(parse_policy_token(stripped))
             continue
-        if index == 0:
-            params.append(f"policy-regex-filter={stripped}")
+        if not regex_filter:
+            regex_filter = stripped
             continue
         raise ValueError(f"Unsupported select group token: {stripped}")
 
     parts = [f"{name} = select"]
+    if regex_filter:
+        parts.append(f",{SUBSCRIPTION_NAME}")
     if policies:
         parts.append("," + ",".join(policies))
-    if params:
-        parts.append("," + ",".join(params))
+    if regex_filter:
+        parts.append(f",use=true,policy-regex-filter={regex_filter}")
     return "".join(parts)
 
 
@@ -95,13 +98,14 @@ def render_test_group(name: str, group_type: str, tail_tokens: list[str]) -> str
         )
 
     interval, timeout, tolerance = timing_tokens
-    params = [f"policy-regex-filter={regex_filter}", f"url={test_url}"]
+    params = [SUBSCRIPTION_NAME, "use=true", f"policy-regex-filter={regex_filter}"]
     if interval:
         params.append(f"interval={interval}")
     if timeout:
         params.append(f"timeout={timeout}")
     if tolerance:
         params.append(f"tolerance={tolerance}")
+    params.append(f"url={test_url}")
 
     return f"{name} = {group_type}," + ",".join(params)
 
