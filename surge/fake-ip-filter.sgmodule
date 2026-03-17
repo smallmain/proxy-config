@@ -1,6 +1,6 @@
-#!name=OpenClash Fake IP Filter
-#!desc=Generated from OpenClash custom fake filter list for Surge.
-# Source: https://raw.githubusercontent.com/vernesong/OpenClash/refs/heads/master/luci-app-openclash/root/etc/openclash/custom/openclash_custom_fake_filter.list
+#!name=Fake IP Filter
+#!desc=Generated fake-ip filter list for Surge.
+#!category=Network
 # Entry count: 164
 
 [General]

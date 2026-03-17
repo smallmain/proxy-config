@@ -62,11 +62,11 @@ def parse_entries(raw_text: str) -> tuple[list[str], list[str]]:
     return entries, skipped_entries
 
 
-def render_module(source_url: str, entries: list[str]) -> str:
+def render_module(entries: list[str]) -> str:
     module_lines = [
-        "#!name=OpenClash Fake IP Filter",
-        "#!desc=Generated from OpenClash custom fake filter list for Surge.",
-        f"# Source: {source_url}",
+        "#!name=Fake IP Filter",
+        "#!desc=Generated fake-ip filter list for Surge.",
+        "#!category=Network",
         f"# Entry count: {len(entries)}",
         "",
         "[General]",
@@ -78,7 +78,7 @@ def render_module(source_url: str, entries: list[str]) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Generate a Surge fake-ip filter module from OpenClash."
+        description="Generate a Surge fake-ip filter module from a source list."
     )
     parser.add_argument("--source-url", default=DEFAULT_SOURCE_URL)
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT_PATH))
@@ -86,7 +86,7 @@ def main() -> None:
 
     raw_text = fetch_text(args.source_url)
     entries, skipped_entries = parse_entries(raw_text)
-    module_text = render_module(args.source_url, entries)
+    module_text = render_module(entries)
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
