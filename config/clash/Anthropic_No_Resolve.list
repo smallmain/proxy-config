@@ -1,0 +1,5 @@
+# Generated from /Users/smallmain/Documents/Work/ios_rule_script/rule/Clash/Anthropic/Anthropic_No_Resolve.yaml
+# Do not edit manually.
+DOMAIN,servd-anthropic-website.b-cdn.net
+DOMAIN-SUFFIX,anthropic.com
+DOMAIN-SUFFIX,claude.ai
