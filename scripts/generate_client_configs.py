@@ -11,7 +11,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BASE_DIR = PROJECT_ROOT / "config" / "base"
 DEFAULT_OUTPUT_ROOT = PROJECT_ROOT / "config"
-DEFAULT_IOS_RULE_SCRIPT_ROOT = Path("/Users/smallmain/Documents/Work/ios_rule_script")
 DEFAULT_RULE_BASE_URL = "https://testingcf.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule"
 DEFAULT_CLASH_RULE_BASE_URL = (
     "https://testingcf.jsdelivr.net/gh/smallmain/proxy-config@main/config/clash"
@@ -195,7 +194,7 @@ def choose_source(
     raise FileNotFoundError(f"Unable to resolve placeholder ${token}$")
 
 
-def convert_clash_yaml_to_list(source_path: Path) -> str:
+def convert_clash_yaml_to_list(source_path: Path, source_hint: str) -> str:
     rules: list[str] = []
     in_payload = False
 
@@ -215,7 +214,6 @@ def convert_clash_yaml_to_list(source_path: Path) -> str:
     if not rules:
         raise RuntimeError(f"No payload rules found in {source_path}")
 
-    source_hint = source_path.as_posix()
     return "\n".join(
         [
             f"# Generated from {source_hint}",
@@ -258,7 +256,11 @@ class Generator:
             )
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(convert_clash_yaml_to_list(source.path), encoding="utf-8")
+        source_hint = f"rule/Clash/{source.relative_path.as_posix()}"
+        output_path.write_text(
+            convert_clash_yaml_to_list(source.path, source_hint),
+            encoding="utf-8",
+        )
         self.generated_clash_lists[output_name] = source.path
         return f"{self.clash_rule_base_url}/{output_name}"
 
@@ -297,7 +299,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--base-dir", default=str(DEFAULT_BASE_DIR))
     parser.add_argument("--output-root", default=str(DEFAULT_OUTPUT_ROOT))
-    parser.add_argument("--ios-rule-script-root", default=str(DEFAULT_IOS_RULE_SCRIPT_ROOT))
+    parser.add_argument(
+        "--ios-rule-script-root",
+        required=True,
+        help="Path to the local blackmatrix7/ios_rule_script repository.",
+    )
     parser.add_argument(
         "--clash-rule-base-url",
         default=DEFAULT_CLASH_RULE_BASE_URL,

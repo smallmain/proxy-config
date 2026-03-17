@@ -1,4 +1,4 @@
-# Generated from /Users/smallmain/Documents/Work/ios_rule_script/rule/Clash/OpenAI/OpenAI_No_Resolve.yaml
+# Generated from rule/Clash/OpenAI/OpenAI_No_Resolve.yaml
 # Do not edit manually.
 DOMAIN,browser-intake-datadoghq.com
 DOMAIN,chat.openai.com.cdn.cloudflare.net

@@ -4,6 +4,8 @@
 
 This repository stores configuration files for various proxy clients.
 
+Generated artifacts are updated daily by GitHub Actions and pushed back to the repository when upstream data changes.
+
 The `surge` directory stores Surge-related configuration artifacts.
 
 - `surge/fake-ip-filter.sgmodule`: a generated Surge Module that appends entries to `always-real-ip`

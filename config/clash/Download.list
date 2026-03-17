@@ -1,4 +1,4 @@
-# Generated from /Users/smallmain/Documents/Work/ios_rule_script/rule/Clash/Download/Download.yaml
+# Generated from rule/Clash/Download/Download.yaml
 # Do not edit manually.
 DOMAIN-SUFFIX,qbittorrent.org
 DOMAIN-KEYWORD,aria2

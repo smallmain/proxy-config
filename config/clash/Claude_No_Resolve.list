@@ -1,4 +1,4 @@
-# Generated from /Users/smallmain/Documents/Work/ios_rule_script/rule/Clash/Claude/Claude_No_Resolve.yaml
+# Generated from rule/Clash/Claude/Claude_No_Resolve.yaml
 # Do not edit manually.
 DOMAIN,cdn.usefathom.com
 DOMAIN-SUFFIX,anthropic.com

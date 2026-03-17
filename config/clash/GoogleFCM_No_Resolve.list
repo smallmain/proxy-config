@@ -1,4 +1,4 @@
-# Generated from /Users/smallmain/Documents/Work/ios_rule_script/rule/Clash/GoogleFCM/GoogleFCM_No_Resolve.yaml
+# Generated from rule/Clash/GoogleFCM/GoogleFCM_No_Resolve.yaml
 # Do not edit manually.
 DOMAIN,alt1-mtalk.google.com
 DOMAIN,alt2-mtalk.google.com

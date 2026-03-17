@@ -4,6 +4,8 @@
 
 这个仓库用于存放各类代理软件的配置文件。
 
+仓库中的生成产物会由 GitHub Actions 每天自动更新；当上游数据发生变化时，工作流会自动提交并推送回当前仓库。
+
 `surge` 目录用于存放 Surge 相关配置产物。
 
 - `surge/fake-ip-filter.sgmodule`：一个生成得到的 Surge Module，用于向 `always-real-ip` 追加条目

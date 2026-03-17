@@ -1,4 +1,4 @@
-# Generated from /Users/smallmain/Documents/Work/ios_rule_script/rule/Clash/Steam/Steam_No_Resolve.yaml
+# Generated from rule/Clash/Steam/Steam_No_Resolve.yaml
 # Do not edit manually.
 DOMAIN-SUFFIX,cdn-ali.content.steamchina.com
 DOMAIN-SUFFIX,cdn-qc.content.steamchina.com
