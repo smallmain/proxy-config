@@ -269,7 +269,11 @@ class Generator:
 
         def replace(match: re.Match[str]) -> str:
             token = match.group(1)
-            source = choose_source(token, source_index, want_noresolve)
+            token_want_noresolve = want_noresolve
+            if token.startswith("!"):
+                token_want_noresolve = True
+                token = token[1:].lstrip()
+            source = choose_source(token, source_index, token_want_noresolve)
             if spec.generate_local_lists:
                 return self.ensure_clash_list(source)
             return f"{spec.url_base}/{source.relative_path.as_posix()}"
