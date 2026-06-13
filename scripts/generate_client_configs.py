@@ -16,6 +16,7 @@ DEFAULT_CLASH_RULE_BASE_URL = (
     "https://testingcf.jsdelivr.net/gh/smallmain/proxy-config@main/config/clash"
 )
 PLACEHOLDER_PATTERN = re.compile(r"\$([^$]+)\$")
+SHADOWROCKET_PROXY_POLICY = "[]PROXY"
 NO_RESOLVE_SUFFIX = "_No_Resolve"
 RESOLVE_SUFFIX = "_Resolve"
 RESOLVE_SENSITIVE_RULE_PREFIXES = (
@@ -224,6 +225,39 @@ def convert_clash_yaml_to_list(source_path: Path, source_hint: str) -> str:
     )
 
 
+def add_shadowrocket_proxy_policy(text: str) -> str:
+    lines: list[str] = []
+
+    for raw_line in text.splitlines():
+        if not raw_line.strip().startswith("custom_proxy_group="):
+            lines.append(raw_line)
+            continue
+
+        prefix, value = raw_line.split("=", 1)
+        tokens = value.split("`")
+        if len(tokens) < 2 or tokens[1].strip() != "select":
+            lines.append(raw_line)
+            continue
+
+        if any(token.strip() == SHADOWROCKET_PROXY_POLICY for token in tokens[2:]):
+            lines.append(raw_line)
+            continue
+
+        policy_indexes = [
+            index
+            for index, token in enumerate(tokens[2:], start=2)
+            if token.strip().startswith("[]")
+        ]
+        insert_index = policy_indexes[-1] + 1 if policy_indexes else len(tokens)
+
+        tokens.insert(insert_index, SHADOWROCKET_PROXY_POLICY)
+        lines.append(f"{prefix}=" + "`".join(tokens))
+
+    if text.endswith("\n"):
+        return "\n".join(lines) + "\n"
+    return "\n".join(lines)
+
+
 class Generator:
     def __init__(
         self,
@@ -294,6 +328,8 @@ class Generator:
                 output_dir.mkdir(parents=True, exist_ok=True)
                 output_path = output_dir / base_file.name
                 rendered = self.replace_placeholders(base_text, spec, want_noresolve)
+                if spec.name == "shadowrocket":
+                    rendered = add_shadowrocket_proxy_policy(rendered)
                 output_path.write_text(rendered, encoding="utf-8")
 
 

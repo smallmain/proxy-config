@@ -11,6 +11,7 @@ DEFAULT_BASE_CONF = PROJECT_ROOT / "shadowrocket" / "base.conf"
 DEFAULT_RULE_CONFIG_DIR = PROJECT_ROOT / "config" / "shadowrocket"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "shadowrocket"
 SUBSCRIPTION_NAME = "SUBLINK.SMALLMAIN.COM"
+DEFAULT_SELECT_POLICY_NAMES = {"日常节点": "PROXY"}
 COMMENT_PREFIXES = ("#", ";")
 INLINE_RULE_FLAGS = {"no-resolve"}
 
@@ -80,6 +81,13 @@ def render_select_group(name: str, tail_tokens: list[str]) -> str:
         parts.append("," + ",".join(policies))
     if regex_filter:
         parts.append(f",use=true,policy-regex-filter={regex_filter}")
+    default_policy = DEFAULT_SELECT_POLICY_NAMES.get(name)
+    if default_policy:
+        available_policies = [SUBSCRIPTION_NAME] if regex_filter else []
+        available_policies.extend(policies)
+        if default_policy not in available_policies:
+            raise ValueError(f"Default policy {default_policy} is not available in {name}")
+        parts.append(f",policy-select-name={default_policy}")
     return "".join(parts)
 
 
